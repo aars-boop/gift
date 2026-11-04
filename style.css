@@ -1,0 +1,1040 @@
+/* =========================================================================
+   style.css · Tire une carte
+   Direction artistique : « Tarot de minuit »
+   (cartes de Tarot de Marseille posées sur une table de nuit indigo)
+   -------------------------------------------------------------------------
+   SOMMAIRE
+   1. Jetons de design : couleurs, polices, rythme  ← à personnaliser d'abord
+   2. Base et fond étoilé
+   3. Composants communs : boutons, liens, focus
+   4. Écran 1 · Ouverture (sceau + lettre)
+   5. Écran 2 · Le tirage (grille de cartes)
+   6. Couche · Carte détaillée (recto, verso, bouton « maintenir »)
+   7. Écran 3 · Choix scellé (bon, tampon, ticket à gratter, petit mot)
+   8. Toast
+   9. Animations (keyframes)
+   10. Accessibilité : mouvements réduits
+   ========================================================================= */
+
+
+/* =========================================================================
+   1. JETONS DE DESIGN
+   Change une valeur ici, elle s'applique partout.
+   ========================================================================= */
+:root {
+  /* Couleurs : chaque couleur a UN rôle, garde cette logique si tu modifies */
+  --c-nuit: #16182F;            /* fond de page */
+  --c-indigo: #262A55;          /* halo lumineux du fond */
+  --c-parchemin: #EFE4CB;       /* cartes et bon */
+  --c-parchemin-fonce: #E3D3AE; /* cartouches, pied de la carte */
+  --c-bleu: #2F4C8F;            /* structure des cartes (cadres, numéros) */
+  --c-ocre: #D6A24E;            /* lumière : progression, focus, ticket */
+  --c-rouge: #B22F2C;           /* engagement : sceau, bouton de choix, tampon */
+  --c-rouge-fonce: #7C1E1F;
+  --c-encre: #231E2E;           /* texte sur parchemin */
+  --c-encre-douce: #5D5468;     /* texte secondaire sur parchemin */
+  --c-texte: #EFE4CB;           /* texte sur fond nuit */
+  --c-texte-doux: #B8B3CC;      /* texte secondaire sur fond nuit */
+
+  /* Polices (avec polices de secours si Google Fonts ne charge pas) */
+  --f-titre: "IM Fell English", "Iowan Old Style", Georgia, serif;
+  --f-numero: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  --f-texte: "Jost", "Futura", "Century Gothic", system-ui, sans-serif;
+
+  /* Échelle typographique (rapport ≈ 1,25) */
+  --t-xs: .8125rem;   /* 13 px */
+  --t-s: .9375rem;    /* 15 px */
+  --t-m: 1rem;        /* 16 px */
+  --t-l: 1.25rem;     /* 20 px */
+  --t-xl: 1.5625rem;  /* 25 px */
+  --t-xxl: 2.25rem;   /* 36 px */
+
+  /* Rythme des animations : trois tempos */
+  --d-rapide: 160ms;  /* réponse immédiate au toucher */
+  --d-moyen: 320ms;   /* changement d'écran, ouverture de la couche */
+  --d-lent: 750ms;    /* retournement 3D, distribution des cartes */
+  --ease-sortie: cubic-bezier(.22, 1, .36, 1);   /* décélération douce */
+  --ease-ressort: cubic-bezier(.34, 1.56, .64, 1); /* léger rebond (tampon) */
+  --ease-carte: cubic-bezier(.3, .7, .2, 1);     /* retournement de carte */
+
+  /* Formes et ombres */
+  --rayon-carte: 12px;
+  --rayon-grande-carte: 18px;
+  --ombre-carte: 0 10px 24px rgba(5, 6, 20, .45), 0 2px 4px rgba(5, 6, 20, .3);
+
+  /* Zones de sécurité Android (encoche en haut, barre de gestes en bas) */
+  --sur-haut: env(safe-area-inset-top, 0px);
+  --sur-bas: env(safe-area-inset-bottom, 0px);
+}
+
+
+/* =========================================================================
+   2. BASE ET FOND
+   ========================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;          /* hauteur réelle de l'écran sur mobile */
+  background: var(--c-nuit);
+  color: var(--c-texte);
+  font-family: var(--f-texte);
+  font-size: var(--t-m);
+  line-height: 1.55;
+  -webkit-tap-highlight-color: transparent; /* pas de flash bleu au toucher */
+  overscroll-behavior-y: none; /* pas de « tirer pour rafraîchir » par erreur */
+}
+
+/* Fond fixe : halo indigo + quelques étoiles discrètes.
+   (Un pseudo-élément fixe car background-attachment: fixed est mal géré sur Android.) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(239, 228, 203, .55) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 84% 9%, rgba(239, 228, 203, .45) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 72% 31%, rgba(214, 162, 78, .55) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 26% 46%, rgba(239, 228, 203, .3) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 91% 58%, rgba(239, 228, 203, .35) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 8% 72%, rgba(214, 162, 78, .45) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 58% 84%, rgba(239, 228, 203, .3) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 36% 94%, rgba(239, 228, 203, .4) 0 1px, transparent 1.6px),
+    radial-gradient(120% 70% at 50% -10%, var(--c-indigo) 0%, transparent 70%),
+    var(--c-nuit);
+}
+
+/* Empêche la page de défiler derrière la carte ouverte */
+body.sans-defilement { overflow: hidden; }
+
+h1, h2, h3, p { margin: 0; }
+button { font: inherit; color: inherit; }
+svg { display: block; }
+
+/* Conteneur des écrans : largeur d'un téléphone, centré sur ordinateur */
+.ecran {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: calc(24px + var(--sur-haut)) 20px calc(24px + var(--sur-bas));
+}
+.ecran.is-active { display: flex; }
+.ecran.is-entree { animation: ecran-entree var(--d-lent) var(--ease-sortie) both; }
+.ecran.is-sortie { animation: ecran-sortie var(--d-moyen) ease-in both; }
+
+
+/* =========================================================================
+   3. COMPOSANTS COMMUNS
+   ========================================================================= */
+
+/* Icônes (SVG ou emoji) */
+.ico { width: 100%; height: 100%; }
+.ico--emoji {
+  display: grid;
+  place-items: center;
+  font-size: 1.9em;
+  line-height: 1;
+}
+
+/* Bouton principal (navigation) : parchemin sur nuit */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--f-texte);
+  font-size: var(--t-m);
+  font-weight: 500;
+  letter-spacing: .01em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform var(--d-rapide) var(--ease-sortie);
+}
+.btn:active { transform: scale(.96); }
+.btn--principal {
+  background: var(--c-parchemin);
+  color: var(--c-encre);
+  box-shadow: inset 0 0 0 1px var(--c-ocre), 0 8px 20px rgba(5, 6, 20, .4);
+}
+.btn--large { width: min(100%, 360px); }
+
+/* Lien d'action secondaire */
+.lien {
+  min-height: 44px;            /* zone tactile confortable */
+  padding: 10px 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: var(--t-s);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Focus clavier visible (accessibilité) */
+:focus-visible {
+  outline: 2px solid var(--c-ocre);
+  outline-offset: 3px;
+}
+[tabindex="-1"]:focus { outline: none; }
+
+
+/* =========================================================================
+   4. ÉCRAN 1 · OUVERTURE
+   ========================================================================= */
+.ecran--intro {
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.intro__pour {
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-size: var(--t-l);
+  color: var(--c-ocre);
+}
+
+/* Sceau de cire : forme légèrement irrégulière, relief par ombres internes */
+.sceau {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  margin: 28px 0 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 47% 53% 49% 51% / 52% 47% 53% 48%;
+  background: radial-gradient(circle at 34% 28%, #D9544D 0%, var(--c-rouge) 42%, var(--c-rouge-fonce) 100%);
+  box-shadow:
+    inset 0 -8px 14px rgba(40, 5, 8, .45),
+    inset 0 5px 8px rgba(255, 210, 200, .22),
+    0 14px 34px rgba(5, 6, 20, .55);
+  cursor: pointer;
+  touch-action: manipulation;
+  animation: respirer 2.8s ease-in-out infinite;
+}
+/* Anneau embossé */
+.sceau::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1.5px solid rgba(60, 8, 10, .35);
+  border-radius: 50%;
+  box-shadow: inset 0 2px 4px rgba(40, 5, 8, .55), 0 1px 0 rgba(255, 210, 200, .25);
+}
+/* Halo ocre qui invite à toucher */
+.sceau::after {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border: 1px solid var(--c-ocre);
+  border-radius: 50%;
+  opacity: 0;
+  animation: halo 2.8s ease-out infinite;
+}
+.sceau__lettre {
+  position: relative;
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-size: 3.25rem;
+  line-height: 1;
+  color: var(--c-rouge-fonce);
+  text-shadow: 0 1px 0 rgba(255, 200, 190, .3), 0 -1px 1px rgba(30, 0, 0, .45);
+  transform: translateY(-2px);
+}
+.sceau.is-brise { animation: briser 620ms var(--ease-sortie) forwards; }
+.sceau.is-brise::after { display: none; }
+
+.intro__invite {
+  font-size: var(--t-s);
+  color: var(--c-texte-doux);
+}
+
+/* La lettre apparaît ligne par ligne (--n est posé par le script) */
+.lettre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 34ch;
+}
+.lettre > * {
+  animation: apparaitre 800ms var(--ease-sortie) both;
+  animation-delay: calc(var(--n, 0) * 140ms);
+}
+.lettre__titre {
+  font-family: var(--f-titre);
+  font-weight: 400;
+  font-size: var(--t-xxl);
+  line-height: 1.1;
+  color: var(--c-parchemin);
+}
+.lettre__sous-titre {
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-size: var(--t-l);
+  line-height: 1.3;
+  color: var(--c-ocre);
+}
+.lettre__texte {
+  display: grid;
+  gap: 12px;
+  color: var(--c-texte-doux);
+}
+.lettre__texte p { line-height: 1.6; }
+.lettre__signature {
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-size: var(--t-l);
+  color: var(--c-parchemin);
+}
+.lettre .btn { margin-top: 12px; }
+
+
+/* =========================================================================
+   5. ÉCRAN 2 · LE TIRAGE
+   ========================================================================= */
+/* Hauteur fixe = la grille se partage l'écran en 3 rangées égales */
+.ecran--cartes {
+  gap: 18px;
+  height: 100vh;
+  height: 100dvh;
+}
+/* Très petits écrans (ou paysage) : on laisse la page défiler */
+@media (max-height: 600px) {
+  .ecran--cartes { height: auto; }
+}
+
+.cartes__entete {
+  display: grid;
+  gap: 6px;
+}
+.cartes__titre {
+  font-family: var(--f-titre);
+  font-weight: 400;
+  font-size: var(--t-xxl);
+  line-height: 1.05;
+}
+.cartes__consigne {
+  font-size: var(--t-s);
+  color: var(--c-texte-doux);
+}
+
+/* Compteur de cartes explorées : un losange par carte */
+.progression {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: var(--t-xs);
+  color: var(--c-texte-doux);
+}
+.progression__losanges { display: flex; gap: 8px; }
+.losange {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--c-ocre);
+  transform: rotate(45deg);
+  transition: background-color var(--d-moyen), transform var(--d-moyen) var(--ease-ressort);
+}
+.losange.is-plein {
+  background: var(--c-ocre);
+  transform: rotate(45deg) scale(1.15);
+}
+.progression.is-complete .progression__texte { color: var(--c-ocre); }
+
+/* Grille 2 colonnes qui remplit la hauteur de l'écran */
+.grille {
+  flex: 1 1 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(150px, 1fr);
+  gap: 12px;
+}
+
+/* Une tuile = une carte de tarot miniature */
+.tuile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 16px 12px 14px;
+  border: 0;
+  border-radius: var(--rayon-carte);
+  background: var(--c-parchemin);
+  color: var(--c-encre);
+  box-shadow: var(--ombre-carte);
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform var(--d-rapide) var(--ease-sortie);
+  /* Distribution des cartes à l'arrivée (--i, --rot, --dx posés par le script) */
+  animation: distribuer var(--d-lent) var(--ease-sortie) backwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 150ms);
+}
+.tuile.is-posee { animation: none; }           /* fin de la distribution */
+.tuile.is-posee.is-invite { animation: inviter 1s ease-in-out 2; }
+.tuile:active { transform: scale(.96); }
+
+/* Double cadre bleu + ocre façon Tarot de Marseille */
+.tuile::before,
+.tuile::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+.tuile::before {
+  inset: 5px;
+  border: 1.5px solid var(--c-bleu);
+  border-radius: 8px;
+}
+.tuile::after {
+  inset: 9px;
+  border: 1px solid var(--c-ocre);
+  border-radius: 5px;
+}
+
+.tuile__numero {
+  font-family: var(--f-numero);
+  font-size: var(--t-l);
+  line-height: 1;
+  color: var(--c-bleu);
+}
+.tuile__icone {
+  --taille-icone: clamp(48px, 14vw, 60px);
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--taille-icone);
+  height: var(--taille-icone);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(214, 162, 78, .45) 0%, rgba(214, 162, 78, .12) 70%, transparent 71%);
+  color: var(--c-encre);
+}
+.tuile__icone .ico { width: 62%; height: 62%; }
+
+/* Cartouche du nom, en bas de la carte */
+.tuile__cartouche {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 2.6em;
+  padding: 5px 6px;
+  border: 1.5px solid var(--c-bleu);
+  background: var(--c-parchemin-fonce);
+  font-family: var(--f-titre);
+  font-size: var(--t-m);
+  line-height: 1.15;
+}
+
+/* Petit losange « déjà explorée » */
+.tuile__vue {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 8px;
+  height: 8px;
+  background: var(--c-ocre);
+  box-shadow: 0 0 0 1px rgba(35, 30, 46, .25);
+  transform: rotate(45deg) scale(0);
+  transition: transform var(--d-moyen) var(--ease-ressort);
+}
+.tuile.is-vue .tuile__vue { transform: rotate(45deg) scale(1); }
+
+
+/* =========================================================================
+   6. COUCHE · CARTE DÉTAILLÉE
+   ========================================================================= */
+.detail {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  padding: calc(68px + var(--sur-haut)) 18px calc(20px + var(--sur-bas));
+  background: rgba(9, 10, 26, .78);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--d-moyen) ease, visibility 0s linear var(--d-moyen);
+}
+.detail.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--d-moyen) ease, visibility 0s;
+}
+
+.detail__fermer {
+  position: absolute;
+  top: calc(14px + var(--sur-haut));
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(239, 228, 203, .35);
+  border-radius: 50%;
+  background: rgba(22, 24, 47, .6);
+  color: var(--c-parchemin);
+  cursor: pointer;
+}
+.detail__fermer svg { width: 20px; height: 20px; }
+
+/* Scène 3D : la carte grandit en s'ouvrant */
+.detail__scene {
+  width: min(100%, 380px);
+  aspect-ratio: 5 / 9;         /* proportions d'une carte de tarot */
+  max-height: 100%;
+  perspective: 1600px;
+  transform: translateY(28px) scale(.92);
+  transition: transform 520ms var(--ease-sortie);
+}
+.detail.is-open .detail__scene { transform: none; }
+
+.detail__carte {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--d-lent) var(--ease-carte);
+}
+.detail__carte.is-retournee { transform: rotateY(180deg); }
+
+/* Les deux faces, dos à dos */
+.face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--rayon-grande-carte);
+  background: var(--c-parchemin);
+  color: var(--c-encre);
+  box-shadow: 0 30px 60px rgba(3, 4, 14, .6);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.face::before,
+.face::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+.face::before {
+  inset: 8px;
+  border: 2px solid var(--c-bleu);
+  border-radius: 12px;
+}
+.face::after {
+  inset: 13px;
+  border: 1px solid var(--c-ocre);
+  border-radius: 8px;
+}
+
+/* --- Recto (la carte agrandie) --- */
+.face--recto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 36px 28px 30px;
+  border: 0;
+  text-align: center;
+  cursor: pointer;
+}
+.recto__numero {
+  font-family: var(--f-numero);
+  font-size: var(--t-xl);
+  line-height: 1;
+  color: var(--c-bleu);
+}
+.recto__icone {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(214, 162, 78, .5) 0%, rgba(214, 162, 78, .14) 68%, transparent 70%);
+}
+.recto__icone .ico { width: 56%; height: 56%; }
+.recto__icone .ico--emoji { font-size: 3.5rem; }
+.recto__cartouche {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--c-bleu);
+  background: var(--c-parchemin-fonce);
+  font-family: var(--f-titre);
+  font-size: var(--t-xl);
+  line-height: 1.15;
+}
+.recto__accroche {
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-size: var(--t-l);
+  line-height: 1.35;
+  color: var(--c-encre-douce);
+}
+.recto__indice {
+  font-size: var(--t-xs);
+  color: var(--c-encre-douce);
+}
+
+/* --- Verso (règles + choix) --- */
+.face--verso {
+  display: flex;
+  flex-direction: column;
+  transform: rotateY(180deg);
+}
+.verso__entete {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 32px 28px 14px;
+  border-bottom: 1px solid rgba(47, 76, 143, .25);
+}
+.verso__numero {
+  font-family: var(--f-numero);
+  font-size: var(--t-l);
+  color: var(--c-bleu);
+}
+.verso__titre {
+  font-family: var(--f-titre);
+  font-weight: 400;
+  font-size: var(--t-xl);
+  line-height: 1.15;
+}
+
+/* Zone qui défile si les règles sont longues */
+.verso__corps {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 28px;
+}
+.verso__corps h3 {
+  margin-bottom: 10px;
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--t-l);
+  color: var(--c-bleu);
+}
+.verso__bas { margin-top: 22px; }
+.verso__bas p {
+  line-height: 1.55;
+  color: var(--c-encre-douce);
+}
+
+.regles {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.regles li {
+  position: relative;
+  padding-left: 20px;
+  line-height: 1.5;
+}
+.regles li::before {               /* puce en losange */
+  content: "";
+  position: absolute;
+  top: .6em;
+  left: 2px;
+  width: 7px;
+  height: 7px;
+  background: var(--c-bleu);
+  transform: rotate(45deg);
+}
+
+.verso__actions {
+  display: grid;
+  gap: 4px;
+  padding: 16px 28px 22px;
+  border-top: 1px solid rgba(47, 76, 143, .25);
+  background: var(--c-parchemin-fonce);
+  text-align: center;
+}
+.verso__aide {
+  min-height: 2.6em;
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--c-encre-douce);
+}
+.verso__actions .lien {
+  justify-self: center;
+  color: var(--c-bleu);
+}
+
+/* Bouton « maintenir pour choisir » :
+   un remplissage rouge avance tant que le doigt reste appuyé (--p de 0 à 1). */
+.btn-maintien {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--c-encre);
+  color: var(--c-parchemin);
+  font-family: var(--f-texte);
+  font-size: var(--t-m);
+  font-weight: 500;
+  cursor: pointer;
+  /* Empêche sélection de texte, menu contextuel et défilement pendant l'appui */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+  transition: transform var(--d-rapide) var(--ease-sortie);
+}
+.btn-maintien::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, var(--c-rouge-fonce), var(--c-rouge));
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+}
+.btn-maintien.is-actif { transform: scale(.98); }
+.btn-maintien.is-relache::before { transition: transform 380ms var(--ease-sortie); }
+.btn-maintien.is-valide { background: var(--c-rouge); }
+
+
+/* =========================================================================
+   7. ÉCRAN 3 · CHOIX SCELLÉ
+   ========================================================================= */
+.ecran--revelation {
+  align-items: center;
+  gap: 22px;
+  padding-top: calc(36px + var(--sur-haut));
+  padding-bottom: calc(40px + var(--sur-bas));
+  text-align: center;
+}
+.revelation__titre {
+  font-family: var(--f-titre);
+  font-weight: 400;
+  font-size: var(--t-xxl);
+  line-height: 1.05;
+}
+.revelation__intro {
+  max-width: 32ch;
+  color: var(--c-texte-doux);
+}
+
+/* --- Le bon, en forme de ticket --- */
+.bon {
+  position: relative;
+  width: min(100%, 360px);
+  color: var(--c-encre);
+  filter: drop-shadow(0 18px 30px rgba(3, 4, 14, .55));
+}
+.bon__haut,
+.bon__bas {
+  --encoche: 11px;               /* rayon des encoches latérales */
+  background: var(--c-parchemin);
+}
+/* Encoches : deux masques couvrant chacun une moitié du ticket */
+.bon__haut {
+  display: grid;
+  gap: 6px;
+  padding: 26px 22px 22px;
+  border-radius: 16px 16px 0 0;
+  -webkit-mask:
+    radial-gradient(circle at 0 100%, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 100%, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle at 0 100%, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 100%, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) right / 51% 100% no-repeat;
+}
+.bon__bas {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding: 18px 22px 22px;
+  border-top: 2px dashed rgba(35, 30, 46, .3);
+  border-radius: 0 0 16px 16px;
+  font-size: var(--t-s);
+  text-align: left;
+  -webkit-mask:
+    radial-gradient(circle at 0 0, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 0, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle at 0 0, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 0, #0000 var(--encoche), #000 calc(var(--encoche) + .5px)) right / 51% 100% no-repeat;
+}
+.bon__etiquette {
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-size: var(--t-l);
+  color: var(--c-encre-douce);
+}
+.bon__numero {
+  font-family: var(--f-numero);
+  color: var(--c-bleu);
+}
+.bon__titre {
+  margin: 2px 0 4px;
+  font-family: var(--f-titre);
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+.bon__detail {
+  font-size: var(--t-s);
+  line-height: 1.5;
+  color: var(--c-encre-douce);
+}
+.bon__secret-label {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--f-titre);
+  font-style: italic;
+  color: var(--c-rouge);
+}
+.bon__bas p {
+  padding-right: 88px;           /* laisse la place au tampon */
+  color: var(--c-encre-douce);
+}
+.bon__bas .bon__de {
+  font-family: var(--f-titre);
+  font-size: var(--t-l);
+  line-height: 1.25;
+  color: var(--c-encre);
+}
+
+/* Tampon de cire encrée qui s'abat sur le bon */
+.tampon {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  margin-top: -39px;
+  border: 2.5px solid currentColor;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 3px var(--c-parchemin), inset 0 0 0 4.5px currentColor;
+  color: var(--c-rouge);
+  font-family: var(--f-numero);
+  font-size: var(--t-m);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transform: rotate(-14deg);
+}
+.tampon.is-pose { animation: tamponner 560ms var(--ease-ressort) 450ms both; }
+.tampon.is-pose-direct { opacity: .88; }
+
+/* --- Ticket à gratter --- */
+.bonus {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  width: min(100%, 360px);
+}
+.bonus__titre {
+  font-family: var(--f-titre);
+  font-weight: 400;
+  font-size: var(--t-xl);
+}
+.bonus__consigne {
+  font-size: var(--t-s);
+  color: var(--c-texte-doux);
+}
+.grattage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 116px;
+  padding: 16px 20px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--c-parchemin);
+  box-shadow: inset 0 0 0 1px rgba(214, 162, 78, .6);
+  color: var(--c-encre);
+}
+.grattage__resultat {
+  font-family: var(--f-titre);
+  font-size: var(--t-l);
+  line-height: 1.3;
+}
+.grattage__couche {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;            /* le doigt gratte au lieu de faire défiler */
+  transition: opacity 700ms ease;
+}
+.grattage.is-revele .grattage__couche { opacity: 0; pointer-events: none; }
+.grattage.is-revele .grattage__resultat { animation: pulsation 900ms var(--ease-ressort); }
+
+/* --- Petit mot --- */
+.mot {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 360px);
+  text-align: left;
+}
+.mot label {
+  font-family: var(--f-titre);
+  font-style: italic;
+  font-size: var(--t-l);
+  color: var(--c-parchemin);
+}
+.mot textarea {
+  width: 100%;
+  min-height: 92px;
+  padding: 12px 14px;
+  border: 1px solid rgba(239, 228, 203, .28);
+  border-radius: 12px;
+  background: rgba(239, 228, 203, .06);
+  color: var(--c-texte);
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+.mot textarea::placeholder { color: rgba(184, 179, 204, .7); }
+.mot textarea:focus {
+  outline: none;
+  border-color: var(--c-ocre);
+  box-shadow: 0 0 0 3px rgba(214, 162, 78, .25);
+}
+
+.revelation__note {
+  font-size: var(--t-xs);
+  color: var(--c-texte-doux);
+}
+
+
+/* =========================================================================
+   8. TOAST
+   ========================================================================= */
+.toast {
+  position: fixed;
+  bottom: calc(24px + var(--sur-bas));
+  left: 50%;
+  z-index: 60;
+  max-width: calc(100% - 40px);
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--c-parchemin);
+  box-shadow: var(--ombre-carte);
+  color: var(--c-encre);
+  font-size: var(--t-s);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 140%);
+  transition: transform var(--d-moyen) var(--ease-sortie), opacity var(--d-moyen);
+}
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+
+/* =========================================================================
+   9. ANIMATIONS
+   ========================================================================= */
+@keyframes ecran-entree {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ecran-sortie {
+  to { opacity: 0; transform: translateY(-10px); }
+}
+@keyframes respirer {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.035); }
+}
+@keyframes halo {
+  0%   { opacity: .7; transform: scale(.9); }
+  100% { opacity: 0;  transform: scale(1.25); }
+}
+@keyframes briser {
+  0%   { transform: scale(1) rotate(0); }
+  20%  { transform: scale(1.1) rotate(4deg); }
+  40%  { transform: scale(.94) rotate(-5deg); }
+  100% { transform: scale(1.7) rotate(-18deg); opacity: 0; filter: blur(6px); }
+}
+@keyframes apparaitre {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+/* Les cartes arrivent du bas de l'écran, comme distribuées par une main */
+@keyframes distribuer {
+  from { opacity: 0; transform: translate(var(--dx, 0), 55vh) rotate(var(--rot, 0deg)) scale(.7); }
+  60%  { opacity: 1; }
+  to   { opacity: 1; transform: none; }
+}
+/* Petite secousse d'invitation si rien n'a été touché */
+@keyframes inviter {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: translateY(-3px) rotate(-3deg); }
+  40% { transform: translateY(-3px) rotate(3deg); }
+  60% { transform: rotate(-2deg); }
+  80% { transform: rotate(1deg); }
+}
+@keyframes tamponner {
+  0%   { opacity: 0;   transform: rotate(-14deg) scale(2.6); }
+  55%  { opacity: .92; transform: rotate(-14deg) scale(.9); }
+  100% { opacity: .88; transform: rotate(-14deg) scale(1); }
+}
+@keyframes pulsation {
+  0%   { transform: scale(.9); }
+  60%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+
+/* =========================================================================
+   10. ACCESSIBILITÉ · MOUVEMENTS RÉDUITS
+   Si « Supprimer les animations » est activé dans Android, tout devient
+   quasi instantané (les fins d'animation se déclenchent quand même).
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  .sceau, .sceau::after { animation: none !important; }
+  .sceau.is-brise { animation: briser 1ms forwards !important; }
+}
