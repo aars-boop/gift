@@ -144,12 +144,11 @@ const CONFIG = {
      numeroWhatsApp : ton numéro au format international, sans + ni espaces
                       (ex. '33612345678' pour 06 12 34 56 78 en France).
                       Laisse '' pour utiliser le menu de partage d'Android. */
-  partage: {
-    numeroWhatsApp: '',
-    // Repères disponibles : {partenaire} {numero} {titre} {bonus} {mot}
-    message: '✦ {partenaire} a tiré la carte {numero} : {titre}\nBonus gagné : {bonus}{mot}',
-    formatMot: '\nSon petit mot : « {mot} »',  // ajouté seulement si elle a écrit un mot
-  },
+partage: {
+  discordWebhookUrl: 'https://discord.com/api/webhooks/1567688505583210523/Es-kZFaqyLW2AKdljOBjxPWommrbl1Jc1vvyVu00jXeUlscUYf5jnR59UD33UVGHT-v-', // Colle ton URL entre guillemets
+  message: '✦ {partenaire} a tiré la carte {numero} : {titre}\nBonus gagné : {bonus}{mot}',
+  formatMot: '\nSon petit mot : « {mot} »',
+},
 
   /* --- Tous les textes de l'interface --- */
   textes: {
