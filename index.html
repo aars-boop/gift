@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport-fit=cover : le site occupe tout l'écran, y compris autour de l'encoche -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Couleur de la barre d'adresse de Chrome sur Android (= couleur du fond) -->
+  <meta name="theme-color" content="#16182F">
+  <!-- Demande aux moteurs de recherche de ne pas indexer la page -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Titre de l'onglet et aperçu du lien quand tu l'envoies par message -->
+  <title>Tire une carte</title>
+  <meta name="description" content="Six cartes, un seul cadeau à choisir.">
+  <meta property="og:title" content="Tire une carte">
+  <meta property="og:description" content="Six cartes, un seul cadeau à choisir.">
+
+  <!-- Icône de l'onglet : un emoji dans un SVG (remplace 🃏 par ce que tu veux) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
+
+  <!-- Polices Google : IM Fell English (titres) + Jost (texte) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Jost:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =====================================================================
+       ICÔNES
+       Chaque <symbol> est une icône utilisable dans CONFIG (script.js) via
+       son nom sans le préfixe « ico- ». Exemple : icone: 'montre'.
+       Icônes disponibles : montre, soin, valise, diner, couronne, mystere,
+                            cadeau, coeur, avion, fleur
+       Tu peux aussi mettre directement un emoji dans CONFIG (icone: '🎧').
+       ===================================================================== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="ico-montre" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5.5"/>
+          <path d="M9 7 9.6 3h4.8l.6 4M9 17l.6 4h4.8l.6-4M12 9.6V12l1.7 1.2M17.5 12h1"/>
+        </g>
+      </symbol>
+      <symbol id="ico-soin" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 10.5h11v3a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/>
+          <path d="M16 11.5h1.4a2 2 0 0 1 0 4H16M4 21h14"/>
+          <path d="M10.5 5.2c-.9-.9-2.4-.3-2.4.9 0 1 1.4 1.8 2.4 2.4 1-.6 2.4-1.4 2.4-2.4 0-1.2-1.5-1.8-2.4-.9z"/>
+        </g>
+      </symbol>
+      <symbol id="ico-valise" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="8" width="16" height="11.5" rx="2"/>
+          <path d="M9 8V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M8 8v11.5M16 8v11.5"/>
+        </g>
+      </symbol>
+      <symbol id="ico-diner" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 17a7 7 0 0 1 14 0zM3 19.5h18M12 10V8.6"/>
+          <circle cx="12" cy="7.6" r="1"/>
+        </g>
+      </symbol>
+      <symbol id="ico-couronne" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 17 3.5 8l4.8 3.8L12 6l3.7 5.8L20.5 8l-1 9zM5 20h14"/>
+        </g>
+      </symbol>
+      <symbol id="ico-mystere" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8z"/>
+          <path d="M18 15l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>
+        </g>
+      </symbol>
+      <symbol id="ico-cadeau" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="10" width="16" height="10" rx="1"/>
+          <rect x="3" y="7" width="18" height="3" rx="1"/>
+          <path d="M12 7v13M12 7c-1.5-3-5-3-4.5-.6.3 1.1 2.8.6 4.5.6zm0 0c1.5-3 5-3 4.5-.6-.3 1.1-2.8.6-4.5.6z"/>
+        </g>
+      </symbol>
+      <symbol id="ico-coeur" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>
+        </g>
+      </symbol>
+      <symbol id="ico-avion" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 13.5 21 6l-5 14-4-6zM12 14l9-8"/>
+        </g>
+      </symbol>
+      <symbol id="ico-fleur" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="2"/>
+          <path d="M12 6c0-3 3-3 3-1s-1 2.5-3 3m0-2c0-3-3-3-3-1s1 2.5 3 3M12 10v10M12 16c-2-3-5-3-6-2 1 2 4 2 6 2zm0-2c2-2 4-2 5-1-1 1.6-3 1.6-5 1"/>
+        </g>
+      </symbol>
+      <symbol id="ico-fermer" viewBox="0 0 24 24">
+        <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Tous les textes sont injectés par script.js depuis l'objet CONFIG :
+       pas besoin de les modifier ici. -->
+  <main id="app">
+
+    <!-- =================================================================
+         ÉCRAN 1 · OUVERTURE
+         Le sceau se brise au toucher et laisse apparaître la lettre.
+         ================================================================= -->
+    <section id="ecran-intro" class="ecran ecran--intro is-active" aria-labelledby="intro-titre">
+      <p class="intro__pour" id="intro-pour"></p>
+
+      <button class="sceau" id="sceau" type="button">
+        <span class="sceau__lettre" id="sceau-lettre" aria-hidden="true"></span>
+      </button>
+      <p class="intro__invite" id="intro-invite" aria-hidden="true"></p>
+
+      <div class="lettre" id="lettre" hidden>
+        <h1 class="lettre__titre" id="intro-titre" tabindex="-1"></h1>
+        <p class="lettre__sous-titre" id="intro-sous-titre"></p>
+        <div class="lettre__texte" id="intro-texte"></div>
+        <p class="lettre__signature" id="intro-signature"></p>
+        <button class="btn btn--principal" id="btn-decouvrir" type="button"></button>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         ÉCRAN 2 · LE TIRAGE
+         Grille de cartes générée depuis CONFIG.cadeaux.
+         ================================================================= -->
+    <section id="ecran-cartes" class="ecran ecran--cartes" aria-labelledby="cartes-titre">
+      <header class="cartes__entete">
+        <h1 class="cartes__titre" id="cartes-titre" tabindex="-1"></h1>
+        <p class="cartes__consigne" id="cartes-consigne"></p>
+        <div class="progression" id="progression" role="status" aria-live="polite">
+          <span class="progression__losanges" id="progression-losanges" aria-hidden="true"></span>
+          <span class="progression__texte" id="progression-texte"></span>
+        </div>
+      </header>
+      <div class="grille" id="grille"></div>
+    </section>
+
+    <!-- =================================================================
+         ÉCRAN 3 · CHOIX SCELLÉ
+         Bon officiel, ticket à gratter, petit mot et envoi.
+         ================================================================= -->
+    <section id="ecran-revelation" class="ecran ecran--revelation" aria-labelledby="revelation-titre">
+      <h1 class="revelation__titre" id="revelation-titre" tabindex="-1"></h1>
+      <p class="revelation__intro" id="revelation-intro"></p>
+
+      <!-- Le bon, découpé comme un ticket (encoches en CSS) -->
+      <article class="bon" aria-labelledby="bon-titre">
+        <div class="bon__haut">
+          <p class="bon__etiquette" id="bon-etiquette"></p>
+          <p class="bon__numero" id="bon-numero"></p>
+          <h2 class="bon__titre" id="bon-titre"></h2>
+          <p class="bon__detail" id="bon-detail"></p>
+        </div>
+        <div class="bon__bas">
+          <p class="bon__de" id="bon-de"></p>
+          <p id="bon-date"></p>
+          <p id="bon-code"></p>
+          <p id="bon-validite"></p>
+          <div class="tampon" id="tampon" aria-hidden="true"><span id="tampon-texte"></span></div>
+        </div>
+      </article>
+
+      <!-- Ticket à gratter : le bonus est sous un <canvas> qu'on efface au doigt -->
+      <section class="bonus" id="bonus" aria-labelledby="bonus-titre">
+        <h2 class="bonus__titre" id="bonus-titre"></h2>
+        <p class="bonus__consigne" id="bonus-consigne"></p>
+        <div class="grattage" id="grattage">
+          <p class="grattage__resultat" id="bonus-resultat"></p>
+          <canvas class="grattage__couche" id="grattage-couche" aria-hidden="true"></canvas>
+        </div>
+        <button class="lien" id="btn-reveler" type="button"></button>
+      </section>
+
+      <!-- Petit mot facultatif, ajouté au message envoyé -->
+      <div class="mot">
+        <label for="mot-texte" id="mot-label"></label>
+        <textarea id="mot-texte" rows="3" maxlength="280"></textarea>
+      </div>
+
+      <button class="btn btn--principal btn--large" id="btn-partager" type="button"></button>
+      <p class="revelation__note" id="revelation-note"></p>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       COUCHE · CARTE DÉTAILLÉE
+       S'ouvre par-dessus la grille. Recto = la carte agrandie,
+       verso = règles + bouton « maintenir pour choisir ».
+       ===================================================================== -->
+  <div class="detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="verso-titre">
+    <button class="detail__fermer" id="detail-fermer" type="button">
+      <svg aria-hidden="true"><use href="#ico-fermer"></use></svg>
+    </button>
+
+    <div class="detail__scene">
+      <div class="detail__carte" id="detail-carte">
+
+        <!-- Recto : toucher la carte la retourne -->
+        <button class="face face--recto" id="detail-recto" type="button"></button>
+
+        <!-- Verso -->
+        <div class="face face--verso" id="detail-verso" inert>
+          <div class="verso__entete">
+            <span class="verso__numero" id="verso-numero"></span>
+            <h2 class="verso__titre" id="verso-titre" tabindex="-1"></h2>
+          </div>
+
+          <div class="verso__corps" id="verso-corps">
+            <h3 id="verso-regles-titre"></h3>
+            <ul class="regles" id="verso-regles"></ul>
+            <div class="verso__bas" id="verso-bas">
+              <h3 id="verso-bas-titre"></h3>
+              <p id="verso-bas-texte"></p>
+            </div>
+          </div>
+
+          <div class="verso__actions">
+            <button class="btn-maintien" id="btn-maintien" type="button" aria-describedby="maintien-aide">
+              <span id="maintien-label"></span>
+            </button>
+            <p class="verso__aide" id="maintien-aide" aria-live="polite"></p>
+            <button class="lien" id="btn-recto" type="button"></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Petit message temporaire (ex. « Message copié ») -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
