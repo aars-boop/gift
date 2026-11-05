@@ -59,7 +59,6 @@ const CONFIG = {
       regles: [
         "Pendant 1 semaine, tu devras faires des petites betises tous les jours",
         'Sans jamais jouir !',
-        '',
       ],
       bonASavoir: 'Je pourrais ajouter des petits gages aléatoirement <3',
       secret: '',
@@ -72,7 +71,6 @@ const CONFIG = {
         "7 jours d'affilée, qui démarrent quand tu veux",
         '7 jours où tu seras a mon service',
         'Pour des massages et plus...',
-        '',
       ],
       bonASavoir: '<3',
       secret: '',
@@ -86,9 +84,8 @@ const CONFIG = {
       regles: [
         'On essayera ensemble quelques lhypnose.',
         'Le progamme est connu davance, je serai irresistible !',
-        "J",
       ],
-      bonASavoir: 'Si tu veux, tu peux savoir exactement ce que je vais faire en avance',
+      bonASavoir: 'Si tu le souhaites, tu peux savoir exactement ce que je ferrai faire en avance',
       secret: '',
     },
     {
@@ -98,7 +95,6 @@ const CONFIG = {
       regles: [
         'Jaime tes petites 🍑',
         '<3',
-        "",
       ],
       bonASavoir: "Miam !",
       secret: '',
@@ -158,7 +154,7 @@ partage: {
       invite: 'Touche le sceau pour ouvrir',
       sceauAria: 'Briser le sceau et ouvrir la lettre',
       titre: "C'est bientôt mon anniversaire",
-      sousTitre: "Et cette année, c'est moi qui choisi les cartes !!",
+      sousTitre: "Et cette année, c'est moi qui choisi les cadeaux !!",
       paragraphes: [
         "J'ai préparé six cartes. Chacune cache un cadeau que tu pourrais m'offrir, avec ses propres règles.",
         "Retourne-les, compare, hésite autant que tu veux. Tu n'en choisiras qu'une, et une fois scellé, ton choix sera définitif.",
