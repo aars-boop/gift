@@ -54,7 +54,7 @@ const CONFIG = {
   cadeaux: [
     {
       titre: 'Edging',
-      icone: 'montre',
+      icone: '⏳',
       accroche: 'Pour bruler de desir.',
       regles: [
         "Pendant 1 semaine, tu devras faires des petites betises tous les jours",
