@@ -878,29 +878,38 @@ async function partager() {
 
   vibrer(10);
 
-  // 1. WhatsApp direct si un numéro est configuré
-  const numero = String(p.numeroWhatsApp || '').replace(/\D/g, '');
-  if (numero) {
-    window.location.href = `https://wa.me/${numero}?text=${encodeURIComponent(message)}`;
+  // Si aucun webhook n'est configuré ou si c'est la valeur par défaut, repli sur le presse-papier
+  if (!p.discordWebhookUrl || p.discordWebhookUrl.includes('VOTRE_URL')) {
+    try {
+      await navigator.clipboard.writeText(message);
+      afficherToast(CONFIG.textes.envoi.copie);
+    } catch (err) {
+      window.prompt(CONFIG.textes.envoi.copieManuelle, message);
+    }
     return;
   }
 
-  // 2. Menu de partage natif d'Android (WhatsApp, SMS, Messenger…)
-  if (navigator.share) {
-    try {
-      await navigator.share({ text: message });
-      return;
-    } catch (err) {
-      if (err && err.name === 'AbortError') return; // elle a fermé le menu
-    }
-  }
-
-  // 3. Copie dans le presse-papiers, en dernier recours
+  // Envoi direct vers Discord via le Webhook
   try {
-    await navigator.clipboard.writeText(message);
-    afficherToast(CONFIG.textes.envoi.copie);
+    const reponse = await fetch(p.discordWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: message })
+    });
+
+    if (reponse.ok) {
+      afficherToast('Réponse bien reçue sur Discord !');
+    } else {
+      throw new Error('Erreur lors de l\'envoi Discord');
+    }
   } catch (err) {
-    window.prompt(CONFIG.textes.envoi.copieManuelle, message);
+    // En cas de problème réseau, on copie le message par sécurité
+    try {
+      await navigator.clipboard.writeText(message);
+      afficherToast('Erreur Discord. Message copié dans le presse-papier.');
+    } catch (e) {
+      window.prompt(CONFIG.textes.envoi.copieManuelle, message);
+    }
   }
 }
 
