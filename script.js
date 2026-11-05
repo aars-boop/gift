@@ -31,9 +31,9 @@
 const CONFIG = {
 
   /* --- Prénoms --- */
-  prenomPartenaire: 'Léa',   // ← son prénom
-  monPrenom: 'Alex',         // ← ton prénom (signature de la lettre, bon)
-  initialeSceau: 'A',        // ← lettre gravée dans le sceau de cire
+  prenomPartenaire: '🐙',   // ← son prénom
+  monPrenom: '🐯',         // ← ton prénom (signature de la lettre, bon)
+  initialeSceau: 'S',        // ← lettre gravée dans le sceau de cire
 
   /* --- Réglages --- */
   verrouillerChoix: true,    // true : une fois scellé, le site rouvre directement sur le bon
@@ -53,66 +53,66 @@ const CONFIG = {
      Tu peux mettre plus ou moins de 6 cartes : la grille et le compteur s'adaptent. */
   cadeaux: [
     {
-      titre: 'Une montre',
+      titre: 'Edging',
       icone: 'montre',
-      accroche: 'Pour que chacune de nos minutes se voie au poignet.',
+      accroche: 'Pour bruler de desir.',
       regles: [
-        "Budget : jusqu'à 150 €",
-        'Tu choisis le modèle, en gardant mes goûts en tête',
-        'Remise en main propre, avec un vrai paquet cadeau',
+        "Pendant 1 semaine, tu devras faires des petites betises tous les jours",
+        'Sans jamais jouir !',
+        '',
       ],
-      bonASavoir: 'Je peux te glisser deux ou trois modèles qui me plaisent si tu veux un indice.',
+      bonASavoir: 'Je pourrais ajouter des petits gages aléatoirement <3',
       secret: '',
     },
     {
-      titre: 'Au petit soin pendant 1 semaine',
-      icone: 'soin',
-      accroche: 'Sept jours où je deviens ta priorité numéro un.',
+      titre: 'Au petit soin',
+      icone: 'couronne',
+      accroche: 'Sept jours où je deviens ton roi',
       regles: [
-        "7 jours d'affilée, qui démarrent quand tu veux ce mois-ci",
-        'Au moins 3 petits-déjeuners au lit',
-        'Un massage par jour, de 10 minutes minimum',
-        'Je ne touche ni à la vaisselle ni aux poubelles',
+        "7 jours d'affilée, qui démarrent quand tu veux",
+        '7 jours où tu seras a mon service',
+        'Pour des massages et plus...',
+        '',
       ],
-      bonASavoir: 'Les câlins sont illimités et ne comptent pas dans le quota.',
+      bonASavoir: '<3',
       secret: '',
     },
 
     /* ↓↓↓ CARTES 3 À 6 : SUGGESTIONS, remplace-les par tes propres idées ↓↓↓ */
     {
-      titre: 'Un week-end surprise',
+      titre: 'Tes paupieres sont lourdes',
       icone: 'valise',
-      accroche: 'Tu organises, je fais ma valise sans rien savoir.',
+      accroche: 'Un voyage immaginaire',
       regles: [
-        '2 jours et 1 nuit, à moins de 3 h de route',
-        'Tu choisis la destination et le programme',
-        "Je ne découvre où l'on va qu'au moment du départ",
+        'On essayera ensemble quelques lhypnose.',
+        'Le progamme est connu davance, je serai irresistible !',
+        "J",
       ],
-      bonASavoir: 'Préviens-moi juste de la météo pour que je prenne les bons vêtements.',
+      bonASavoir: 'Si tu veux, tu peux savoir exactement ce que je vais faire en avance',
       secret: '',
     },
     {
-      titre: "Un dîner d'exception",
-      icone: 'diner',
-      accroche: 'Une table, des bougies, et toute la soirée pour nous.',
+      titre: "🍑",
+      icone: 'soin',
+      accroche: 'Le fruit defendu',
       regles: [
-        'Restaurant de ton choix, ou dîner cuisiné par toi',
-        'Tenue élégante exigée pour nous deux',
-        "Entrée, plat et dessert : on ne saute rien",
+        'Jaime tes petites 🍑',
+        '<3',
+        "",
       ],
-      bonASavoir: "S'il y a du fromage, je ne dirai pas non.",
+      bonASavoir: "Miam !",
       secret: '',
     },
     {
-      titre: 'Une journée « oui »',
+      titre: 'De nouvelles compétences',
       icone: 'couronne',
-      accroche: 'Pendant 24 heures, tu dis oui à (presque) tout.',
+      accroche: '',
       regles: [
         'Je prépare le programme de la journée',
         'Tu as droit à un seul joker pour refuser une activité',
         'Rien de dangereux, rien d’illégal, rien de ruineux',
       ],
-      bonASavoir: "Je te préviens la veille de l'heure du réveil.",
+      bonASavoir: "Tu peux t'entrainer avec des jouets... ou avec moi",
       secret: '',
     },
     {
@@ -121,23 +121,23 @@ const CONFIG = {
       accroche: 'Je ne dirai rien. Tu me fais confiance ?',
       regles: [
         "Son contenu n'est révélé qu'une fois la carte choisie",
-        'Elle ne coûte pas plus cher que les autres',
-        'Promis, elle va te plaire aussi',
+        '',
+        'Promis, elle devrait te plaire aussi',
       ],
-      bonASavoir: '',
-      secret: 'Un après-midi spa pour nous deux : tu réserves, je m’occupe du goûter après.',
+      bonASavoir: '<3',
+      secret: 'Tu as un budeget de 300$ pour acheter une tenu à laquelle je ne pourrais pas resister. Bonne chance !',
     },
   ],
 
   /* --- Bonus du ticket à gratter (pour ELLE, tiré au hasard) ---
      Laisse la liste vide [] pour supprimer le ticket à gratter. */
   bonus: [
-    'Un petit-déjeuner au lit, servi par moi',
-    'Un massage de 20 minutes, quand tu veux',
-    'Le choix du film pendant une semaine',
     'Un bouquet de fleurs dans les 7 jours',
-    'Un joker « j’ai raison » à utiliser une fois',
-    'Une soirée sans écrans, rien que nous deux',
+    'Un massage de 20 minutes, quand tu veux',
+    'Un bouquet de fleurs dans les 7 jours',
+    'Un bouquet de fleurs dans les 7 jours',
+    'Un bouquet de fleurs dans les 7 jours',
+    'Un bouquet de fleurs dans les 7 jours',
   ],
 
   /* --- Envoi du choix ---
