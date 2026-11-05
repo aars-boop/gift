@@ -58,7 +58,7 @@ const CONFIG = {
       accroche: 'Pour bruler de desir.',
       regles: [
         "Pendant 1 semaine, tu devras faires des petites betises tous les jours",
-        'Sans jamais jouir !',
+        'Ne jamais jouir !',
       ],
       bonASavoir: 'Je pourrais ajouter des petits gages aléatoirement <3',
       secret: '',
@@ -72,7 +72,7 @@ const CONFIG = {
         '7 jours où tu seras a mon service',
         'Pour des massages et plus...',
       ],
-      bonASavoir: '<3',
+      bonASavoir: 'Bonne chance <3',
       secret: '',
     },
 
@@ -82,10 +82,10 @@ const CONFIG = {
       icone: 'valise',
       accroche: 'Un voyage immaginaire',
       regles: [
-        'On essayera ensemble quelques lhypnose.',
-        'Le progamme est connu davance, je serai irresistible !',
+        'On essayera ensemble lhypnose.',
+        'Le progamme est connu davance et ajustable ensemble !',
       ],
-      bonASavoir: 'Si tu le souhaites, tu peux savoir exactement ce que je ferrai faire en avance',
+      bonASavoir: 'Tu va aimer mecouter <3',
       secret: '',
     },
     {
@@ -94,6 +94,7 @@ const CONFIG = {
       accroche: 'Le fruit defendu',
       regles: [
         'Jaime tes petites 🍑',
+          'Elles mappartiennent donc ',
         '<3',
       ],
       bonASavoir: "Miam !",
@@ -105,9 +106,8 @@ const CONFIG = {
       accroche: '',
       regles: [
         'Tu as 2 semaines pour apprendre une nouvelle competence:',
-        'le deepthroat',
-        'Ou alors, le squiting',
-         'Nhesite pas a lire des tuto et a essayer <3',
+        'le deepthroatu alors, le squiting',
+         'Tu devras lire des tuto et tentrainer <3',
       ],
       bonASavoir: "Tu peux t'entrainer avec des jouets... ou avec moi",
       secret: '',
@@ -118,8 +118,8 @@ const CONFIG = {
       accroche: 'Je ne dirai rien. Tu me fais confiance ?',
       regles: [
         "Son contenu n'est révélé qu'une fois la carte choisie",
-        'Je sais comme tu es joueuse...',
-        '',
+        'Je sais que tu joueuse et que tu vas prendre cette carte...',
+        'Un fois validé, il ny a pas de retour en arriere !',
       ],
       bonASavoir: '<3',
       secret: 'Tu as un budeget de 300$ pour acheter une tenu à laquelle je ne pourrais pas te resister. Bonne chance !',
