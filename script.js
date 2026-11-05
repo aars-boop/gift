@@ -108,9 +108,10 @@ const CONFIG = {
       icone: 'couronne',
       accroche: '',
       regles: [
-        'Je prépare le programme de la journée',
-        'Tu as droit à un seul joker pour refuser une activité',
-        'Rien de dangereux, rien d’illégal, rien de ruineux',
+        'Tu as 2 semaines pour apprendre une nouvelle competence:',
+        'le deepthroat',
+        'Ou alors, le squiting',
+         'Nhesite pas a lire des tuto et a essayer <3',
       ],
       bonASavoir: "Tu peux t'entrainer avec des jouets... ou avec moi",
       secret: '',
