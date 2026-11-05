@@ -122,11 +122,11 @@ const CONFIG = {
       accroche: 'Je ne dirai rien. Tu me fais confiance ?',
       regles: [
         "Son contenu n'est révélé qu'une fois la carte choisie",
+        'Je sais comme tu es joueuse...',
         '',
-        'Promis, elle devrait te plaire aussi',
       ],
       bonASavoir: '<3',
-      secret: 'Tu as un budeget de 300$ pour acheter une tenu à laquelle je ne pourrais pas resister. Bonne chance !',
+      secret: 'Tu as un budeget de 300$ pour acheter une tenu à laquelle je ne pourrais pas te resister. Bonne chance !',
     },
   ],
 
